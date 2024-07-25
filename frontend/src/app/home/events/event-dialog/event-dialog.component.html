@@ -1,0 +1,67 @@
+<tui-loader [showLoader]="isLoading" [overlay]="true">
+  @if (!eventId) {
+
+  <h1 class="text-2xl mb-5 font-semibold">Create Event</h1>
+  <div class="mb-5">
+    <app-event-form
+      [form]="form"
+      formId="form"
+      (submitEvent)="createEvent($event)"
+    ></app-event-form>
+  </div>
+  <div class="flex flex-row justify-end items-center space-x-3">
+    <button
+      type="button"
+      (click)="context.completeWith(false)"
+      class="rounded-md px-6 py-2 font-semibold text-base border border-gray-300 hover:border-primary-blue hover:text-primary-blue hover:shadow-md"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      form="form"
+      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-primary-blue motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+    >
+      Create
+    </button>
+  </div>
+
+  }@else {
+
+  <h1 class="text-2xl mb-5 font-semibold">Event</h1>
+  <div class="mb-5">
+    <app-event-form
+      [form]="form"
+      formId="form"
+      (submitEvent)="updateEvent($event)"
+    ></app-event-form>
+  </div>
+
+  <div class="flex flex-row justify-end items-center space-x-3">
+    <div class="grow">
+
+      <button
+      type="button"
+      (click)="deleteEvent()"
+      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-red-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+      >
+      Delete
+    </button>
+  </div>
+    <button
+      type="button"
+      (click)="context.completeWith(false)"
+      class="rounded-md px-6 py-2 font-semibold text-base border border-gray-300 hover:border-primary-blue hover:text-primary-blue hover:shadow-md"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      form="form"
+      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-primary-blue motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+    >
+      Save
+    </button>
+  </div>
+  }
+</tui-loader>

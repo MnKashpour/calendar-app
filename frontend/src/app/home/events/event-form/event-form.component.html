@@ -1,0 +1,130 @@
+<div>
+  <form [formGroup]="form" [id]="formId" (submit)="onSubmit()">
+    <div class="mb-5">
+      <tui-input formControlName="title" type="title">
+        Title*
+        <input tuiTextfield type="text" />
+      </tui-input>
+      <app-form-error [control]="form.controls.title"></app-form-error>
+    </div>
+
+    <div class="mb-5">
+      <tui-input formControlName="location" type="location">
+        Location
+        <input tuiTextfield type="text" />
+      </tui-input>
+      <app-form-error [control]="form.controls.location"></app-form-error>
+    </div>
+
+    <div class="flex flex-row justify-between mb-5">
+      <label for="">All Day</label>
+      <tui-toggle
+        formControlName="allDay"
+        size="l"
+        [showIcons]="true"
+      ></tui-toggle>
+    </div>
+
+    <div class="mb-5">
+      <div
+        formGroupName="start"
+        class="flex flex-row items-center justify-between"
+      >
+        <label for="start" class="basis-3/12">Start: </label>
+        <div class="flex flex-row items-center space-x-2 basis-9/12">
+          <div [class]="hideTime ? 'grow' : 'basis-7/12'">
+            <tui-input-date formControlName="startDate"> Date* </tui-input-date>
+          </div>
+          <div *ngIf="!hideTime" class="basis-5/12">
+            <tui-input-time formControlName="startTime"> Time* </tui-input-time>
+          </div>
+        </div>
+      </div>
+      <app-form-error
+        *ngIf="
+          (form.controls.start.controls.startDate.touched ||
+            form.controls.start.controls.startDate.dirty) &&
+          (form.controls.start.controls.startTime.touched ||
+            form.controls.start.controls.startTime.dirty)
+        "
+        [control]="form.controls.start"
+      ></app-form-error>
+    </div>
+
+    <div class="mb-5">
+      <div
+        formGroupName="end"
+        class="flex flex-row items-center justify-between"
+      >
+        <label for="">End</label>
+        <div class="flex flex-row items-center space-x-2 basis-9/12">
+          <div [class]="hideTime ? 'grow' : 'basis-7/12'">
+            <tui-input-date formControlName="endDate"> Date* </tui-input-date>
+          </div>
+          <div *ngIf="!hideTime" class="basis-5/12">
+            <tui-input-time formControlName="endTime"> Time* </tui-input-time>
+          </div>
+        </div>
+      </div>
+      <app-form-error
+        *ngIf="
+          (form.controls.end.controls.endDate.touched ||
+            form.controls.end.controls.endDate.dirty) &&
+          (form.controls.end.controls.endTime.touched ||
+            form.controls.end.controls.endTime.dirty)
+        "
+        [control]="form.controls.end"
+      ></app-form-error>
+    </div>
+
+    <div class="flex flex-row justify-between items-center mb-5">
+      <div class="grow me-3">
+        <tui-select formControlName="icon" [valueContent]="iconSelect">
+          Icon
+          <ng-template tuiDataList>
+            <tui-data-list>
+              <button *ngFor="let item of icons" tuiOption [value]="item">
+                <ng-container
+                  *ngTemplateOutlet="iconSelect; context: { $implicit: item }"
+                ></ng-container>
+              </button>
+            </tui-data-list>
+          </ng-template>
+        </tui-select>
+        <app-form-error [control]="form.controls.icon"></app-form-error>
+      </div>
+
+      <div class="basis-9/12">
+        <tui-select formControlName="color" [valueContent]="colorSelect">
+          Color
+          <ng-template tuiDataList>
+            <tui-data-list>
+              <button *ngFor="let item of colors" tuiOption [value]="item">
+                <ng-container
+                  *ngTemplateOutlet="colorSelect; context: { $implicit: item }"
+                ></ng-container>
+              </button>
+            </tui-data-list>
+          </ng-template>
+        </tui-select>
+        <app-form-error [control]="form.controls.color"></app-form-error>
+      </div>
+    </div>
+
+    <div>
+      <tui-textarea formControlName="note" [expandable]="true" [rows]="4">
+        Note
+      </tui-textarea>
+      <app-form-error [control]="form.controls.note"></app-form-error>
+    </div>
+  </form>
+</div>
+
+<ng-template #iconSelect let-item>
+  <tui-svg  [src]="item"></tui-svg>
+</ng-template>
+
+<ng-template #colorSelect let-item>
+  <div class="w-4 h-4 rounded me-2" [class]="'bg-' + item + '-300'"></div>
+  <span>{{ item | titlecase }}</span>
+</ng-template>

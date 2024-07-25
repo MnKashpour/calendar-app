@@ -1,0 +1,78 @@
+<div class="flex flex-col justify-center items-center h-screen space-y-12">
+  <div class="motion-safe:hover:scale-[1.02] transition-all duration-250">
+    <div class="flex justify-center items-center space-x-3">
+      <img src="logo.png" alt="logo" class="max-w-16 md:max-w-20 xl:max-w-24" />
+      <h1 class="text-xl md:text-2xl font-semibold">My Calendar App</h1>
+    </div>
+  </div>
+
+  <div class="w-11/12 md:w-1/2 lg:w-2/5 xl:w-1/3">
+    <div class="tui-col_12">
+      <form [formGroup]="loginForm" (submit)="onSubmit()">
+        <tui-loader [showLoader]="isLoading" [overlay]="true">
+          <tui-island>
+            <h3 class="tui-island__title">Login</h3>
+
+            <tui-notification
+              *ngIf="isInvalidCred"
+              status="error"
+            >
+              Provided Credentials are invalid
+            </tui-notification>
+
+            <div class="tui-island__paragraph tui-island__paragraph_link mb-4">
+              <div class="tui-form__row">
+                <p>
+                  <tui-input formControlName="email">Email</tui-input>
+                </p>
+                <p
+                  *ngIf="
+                    loginForm.controls.email.invalid &&
+                    loginForm.controls.email.touched
+                  "
+                  class="text-red-600"
+                >
+                  {{ loginForm.controls.email.errors | formErrorFormatter }}
+                </p>
+              </div>
+
+              <div class="tui-form__row">
+                <p>
+                  <tui-input-password formControlName="password">
+                    Password
+                  </tui-input-password>
+                </p>
+                <p
+                  *ngIf="
+                    loginForm.controls.password.invalid &&
+                    loginForm.controls.password.touched
+                  "
+                  class="text-red-600"
+                >
+                  {{ loginForm.controls.password.errors | formErrorFormatter }}
+                </p>
+              </div>
+            </div>
+
+            <p class="tui-island__paragraph my-5">
+              You don't have an account?
+              <a tuiLink [routerLink]="['/auth/register']">
+                <span class="hover:font-semibold"> Register </span>
+              </a>
+            </p>
+
+            <button
+              tuiButton
+              type="button"
+              size="m"
+              class="tui-island__footer-button motion-safe:hover:scale-[1.01] transition-all duration-250"
+              type="submit"
+            >
+              Login
+            </button>
+          </tui-island>
+        </tui-loader>
+      </form>
+    </div>
+  </div>
+</div>

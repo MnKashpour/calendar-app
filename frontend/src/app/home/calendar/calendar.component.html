@@ -1,0 +1,120 @@
+<!-- <div class="fixed top-[58px] end-8"> -->
+<div class="fixed top-2.5 left-0 right-0">
+  <tui-loader [showLoader]="isLoading"></tui-loader>
+</div>
+
+<div class="h-screen flex flex-col">
+  <div class="flex flex-row justify-between items-center my-2.5 mx-3">
+    <div class="text-lg sm:text-2xl font-bold">
+      {{ currentDate.toLocaleString("default", { month: "long" }) }}
+      {{ currentDate.toLocaleString("default", { year: "numeric" }) }}
+    </div>
+
+    <div class="flex flex-row items-center space-x-3">
+      <button
+        class="text-base sm:text-lg font-semibold px-2 sm:px-6 bg-primary-blue text-white rounded-md motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+        (click)="showEventDialog()"
+      >
+        Add Event
+      </button>
+      <div class="border border-gray-300 rounded-lg">
+        <button
+          class="text-base sm:text-lg font-semibold px-2 sm:px-6 rounded-s-lg border-e-[1px] motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+          (click)="changeMonth(-1)"
+        >
+          {{ "<" }}
+        </button>
+        <button
+          class="text-base sm:text-lg font-semibold px-2 sm:px-6 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+          (click)="goToToday()"
+        >
+          Today
+        </button>
+        <button
+          class="text-base sm:text-lg font-semibold px-2 sm:px-6 rounded-e-lg border-s-[1px] motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+          (click)="changeMonth(1)"
+        >
+          {{ ">" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-gray-400"></div>
+
+  <div class="grid grid-cols-7 grid-rows-1 text-base font-semibold my-1">
+    <p class="text-center border border-gray-200 py-1">Sun</p>
+    <p class="text-center border border-gray-200 py-1">Mon</p>
+    <p class="text-center border border-gray-200 py-1">Tue</p>
+    <p class="text-center border border-gray-200 py-1">Wed</p>
+    <p class="text-center border border-gray-200 py-1">Thu</p>
+    <p class="text-center border border-gray-200 py-1">Fir</p>
+    <p class="text-center border border-gray-200 py-1">Sat</p>
+  </div>
+
+  <div class="grow grid grid-cols-7 grid-rows-5">
+    <div
+      *ngFor="let calendarDay of calendarDays"
+      class="group border border-gray-200 p-2 relative"
+      [class]="{ 'bg-gray-100': !calendarDay.active }"
+    >
+      <div
+        class="mb-2 font-semibold"
+        [class]="
+          calendarDay.isToday
+            ? 'bg-primary-blue text-white rounded-full w-min h-min py-1 px-2'
+            : ''
+        "
+      >
+        {{ calendarDay.day }}
+      </div>
+
+      <ng-container *ngFor="let event of reduceEvents(calendarDay.events)">
+        <div
+          (click)="showEventDialog(event.id)"
+          class="flex flex-row items-center justify-center sm:justify-between rounded-md px-1 mb-1 cursor-pointer motion-safe:hover:scale-[1.01] motion-safe:hover:-translate-y-[1px] transition-all duration-250 hover:shadow-md"
+          [class]="'bg-' + event.color + '-200'"
+        >
+          <div class="flex flex-row items-center space-x-1">
+            <div class="hidden sm:block">
+              <tui-svg [src]="event.icon"></tui-svg>
+            </div>
+            <span class="hidden xl:line-clamp-1 xl:max-w-16 2xl:max-w-24">
+              {{ event.title }}
+            </span>
+          </div>
+          <span *ngIf="!event.allDay" class="font-semibold">
+            {{ event.start.getHours().toString().padStart(2, "0") }}:{{
+              event.start.getMinutes().toString().padStart(2, "0")
+            }}
+          </span>
+        </div>
+      </ng-container>
+
+      <div
+        (click)="showAllEventsInADayDialog(calendarDay, calendarDay.events)"
+        *ngIf="calendarDay.events.length > SHOWN_EVENT_PER_CELL"
+        class="flex flex-row items-center justify-between rounded-md px-1 mb-1 bg-gray-200 cursor-pointer motion-safe:hover:scale-[1.01] motion-safe:hover:-translate-y-[1px] transition-all duration-250 hover:shadow-md"
+      >
+        <div class="flex flex-row items-center space-x-1">
+          <div
+            class="ms-2 me-2 w-2 h-2 bg-black rounded-full hidden xl:block"
+          ></div>
+          <span class="line-clamp-1">
+            +{{ calendarDay.events.length - SHOWN_EVENT_PER_CELL }}
+          </span>
+        </div>
+      </div>
+
+      <button
+        [class]="{ 'group-hover:block': calendarDay.active }"
+        class="hidden absolute bottom-2 right-2 p-0.5 bg-gray-700 text-white rounded-full motion-safe:hover:scale-[1.15] transition-all duration-250"
+        (click)="showEventDialog(undefined, calendarDay)"
+      >
+        <tui-svg src="tuiIconPlusCircle"></tui-svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #lll></ng-template>

@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: 
+      - '2345:5432'
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - calendar-database:/var/lib/postgresql/data
+
+  calendar-backend:
+    image: calendar-backend:latest
+    env_file:
+      - path: backend/.env
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_CLIENT: postgresql
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: personal_calendar
+      DATABASE_USER: postgres
+      DATABASE_USER_PASSWORD: postgres
+      DATABASE_ENABLE_SSL: false
+      JWT_SECRET: obxJKoasd1fa56FG7yhsWg53vxgtr98vhqew98UH38s
+      JWT_EXPIRE: 7d
+    depends_on:
+      - postgres
+    ports:
+      - '3000:3000'
+
+  calendar-frontend:
+    image: calendar-frontend:latest
+    ports:
+      - '4200:4200'
+    depends_on:
+      - calendar-backend 
+
+volumes:
+  calendar-database:

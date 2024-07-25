@@ -1,0 +1,45 @@
+<div class="h-56 p-6 bg-white border border-gray-200 rounded-lg shadow">
+  <div class="hidden text-red-200"></div>
+  <div class="hidden text-red-400"></div>
+  <div class="flex flex-row space-x-2 mb-1">
+    <div
+      class="w-min py-0.5 px-2 rounded-lg bg-gray-200 text-black font-semibold"
+    >
+      {{ event.userRole | titlecase }}
+    </div>
+
+    <tui-svg
+      *ngIf="event.icon"
+      [src]="event.icon"
+      class="min-w-8 py-1 px-3 rounded-lg text-gray-600"
+      [class]="'bg-' + event.color + '-200'"
+    ></tui-svg>
+  </div>
+
+  <div class="flex flex-row items-center space-x-2 mb-2">
+    <h5
+      class="text-xl font-semibold tracking-tight text-gray-900 line-clamp-1 text-ellipsis"
+    >
+      {{ event.title }}
+    </h5>
+  </div>
+
+  <div class="flex flex-row items-center space-x-1 mb-2">
+    <tui-svg src="tuiIconClock" class="text-gray-500"></tui-svg>
+    <p class="text-base tracking-tight text-gray-500">
+      {{ this.formatEventDateTime() }}
+    </p>
+  </div>
+
+  <div class="flex flex-row items-center space-x-1 mb-2">
+    <tui-svg src="tuiIconMapPin" class="text-gray-500"></tui-svg>
+    <p class="text-base tracking-tight text-gray-500">{{ event.location ? event.location : 'N/A' }}</p>
+  </div>
+
+  <p
+    *ngIf="event.note"
+    class="mb-3 font-normal text-gray-500 line-clamp-2 text-ellipsis"
+  >
+    {{ event.note }}
+  </p>
+</div>

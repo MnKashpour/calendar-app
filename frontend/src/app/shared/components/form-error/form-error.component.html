@@ -1,0 +1,3 @@
+<p *ngIf="control!.invalid && (control!.touched || control!.dirty)" class="text-red-600">
+  {{ control!.errors | formErrorFormatter }}
+</p>

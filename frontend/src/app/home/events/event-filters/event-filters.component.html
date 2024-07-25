@@ -1,0 +1,69 @@
+<form [formGroup]="form">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+  
+    <div class="grow mx-5 my-2.5">
+      <tui-input
+        formControlName="search"
+        type="search"
+        [tuiTextfieldCleaner]="true"
+      >
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+      <app-form-error [control]="form.controls['search']"></app-form-error>
+    </div>
+
+    <div class="grow mx-5 my-2.5">
+      <tui-select class="b-form" formControlName="sort" [valueContent]="stringify(sortBy)">
+        Sort By
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button *ngFor="let item of sortBy" tuiOption [value]="item.id">
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+      <app-form-error [control]="form.controls['sort']"></app-form-error>
+    </div>
+  <ng-container class="" formGroupName="filters">
+    <div class="grow mx-5 my-2.5">
+      <tui-select formControlName="eventOwner" [valueContent]="stringify(eventOwners)" [tuiTextfieldCleaner]="true">
+        Event Owner
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button
+              *ngFor="let item of eventOwners"
+              tuiOption
+              [value]="item.id"
+            >
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+      <app-form-error
+        [control]="form.controls['filters'].controls['eventOwner']"
+      ></app-form-error>
+    </div>
+
+    <div class="grow mx-5 my-2.5">
+      <tui-input-date formControlName="from" [tuiTextfieldCleaner]="true"
+        >From</tui-input-date
+      >
+      <app-form-error
+        [control]="form.controls['filters'].controls['from']"
+      ></app-form-error>
+    </div>
+    <div class="grow mx-5 my-2.5">
+      <tui-input-date formControlName="to" [tuiTextfieldCleaner]="true"
+        >To</tui-input-date
+      >
+      <app-form-error
+        [control]="form.controls['filters'].controls['to']"
+      ></app-form-error>
+    </div>
+  </ng-container>
+</div>
+</form>

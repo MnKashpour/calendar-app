@@ -1,0 +1,117 @@
+<div class="block md:hidden w-full">
+  <div class="flex flex-row justify-between mt-2 mb-2">
+    <button
+      class="mx-5"
+      tuiButton
+      type="button"
+      (click)="toggle(true)"
+      (tuiActiveZoneChange)="toggle($event)"
+    >
+      <tui-svg src="tuiIconMenuLarge"></tui-svg>
+      <div *tuiSidebar="open; direction: 'left'">
+        <div class="h-screen">
+          <ng-template [ngTemplateOutlet]="menu"></ng-template>
+        </div>
+      </div>
+    </button>
+
+    <div
+      class="motion-safe:hover:scale-[1.01] transition-all duration-200 mx-5"
+    >
+      <a class="rounded-lg" title="Logo">
+        <img src="logo.png" alt="logo" class="max-w-10" />
+      </a>
+    </div>
+  </div>
+  <div class="border border-gray-100"></div>
+</div>
+
+<tui-scrollbar>
+  <aside
+    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full md:translate-x-0"
+  >
+    <ng-template [ngTemplateOutlet]="menu"></ng-template>
+  </aside>
+</tui-scrollbar>
+
+<ng-template #menu>
+  <div class="h-full px-3 py-4 overflow-y-auto bg-gray-100">
+    <ul class="space-y-2 font-medium h-full">
+      <div class="space-y-2 h-08per">
+        <li class="motion-safe:hover:scale-[1.01] transition-all duration-200">
+          <a
+            class="flex justify-center space-x-3 items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100"
+            [routerLinkActive]="'bg-gray-700'"
+            title="Logo"
+          >
+            <img src="logo.png" alt="logo" class="max-w-8 xl:max-w-10" />
+            <span
+              class="text-base font-bold whitespace-nowrap text-wrap text-center"
+              >My Calendar App</span
+            >
+          </a>
+        </li>
+
+        <!-- <hr class="h-px my-8 bg-gray-400 border-0 -mx-3" /> -->
+      </div>
+
+      <div class="flex flex-col h-92per">
+        <li>
+          <a
+            (click)="close()"
+            [routerLinkActive]="'bg-primary-blue text-white'"
+            [routerLink]="['calendars', authService.user()!.defaultCalendarId]"
+            class="flex items-center p-2 text-gray-900 rounded-lg"
+          >
+            <span class="ml-3">Main Calendar</span>
+          </a>
+        </li>
+        <li>
+          <a
+            (click)="close()"
+            [routerLinkActive]="'bg-primary-blue text-white'"
+            [routerLink]="'/events'"
+            class="flex items-center p-2 text-gray-900 rounded-lg"
+          >
+            <span class="ml-3">Events</span>
+          </a>
+        </li>
+        <div class="mt-auto">
+          <li>
+            <div
+              class="flex items-center space-x-3 p-2 text-gray-900 rounded-lg"
+            >
+              <tui-avatar
+                [text]="
+                  authService.user()!.firstName +
+                  ' ' +
+                  authService.user()!.lastName
+                "
+                class="ms-1"
+                [autoColor]="true"
+                [rounded]="true"
+                [size]="'xs'"
+              ></tui-avatar>
+              <p class="">
+                {{
+                  authService.user()!.firstName +
+                    " " +
+                    authService.user()!.lastName
+                }}
+              </p>
+            </div>
+          </li>
+          <li>
+            <button
+              (click)="logout()"
+              class="flex p-2 w-full ms-1 space-x-3 text-gray-900 rounded-lg"
+            >
+              <tui-svg src="tuiIconLogOut"></tui-svg>
+              <span>Logout</span>
+            </button>
+          </li>
+        </div>
+      </div>
+    </ul>
+  </div>
+</ng-template>
