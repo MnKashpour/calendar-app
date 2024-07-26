@@ -5,7 +5,7 @@ import { RegisterService } from './register.service';
 describe('RegisterService', () => {
   let service: RegisterService;
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(RegisterService);
   });

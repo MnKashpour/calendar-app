@@ -6,11 +6,10 @@ describe('EventCardComponent', () => {
   let component: EventCardComponent;
   let fixture: ComponentFixture<EventCardComponent>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventCardComponent]
-    })
-    .compileComponents();
+      imports: [EventCardComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EventCardComponent);
     component = fixture.componentInstance;

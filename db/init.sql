@@ -1,1 +1,2 @@
 CREATE DATABASE personal_calendar;
+CREATE DATABASE personal_calendar_test;

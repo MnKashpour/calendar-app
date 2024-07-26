@@ -7,7 +7,7 @@ describe('guestGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
     TestBed.runInInjectionContext(() => guestGuard(...guardParameters));
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
   });
 

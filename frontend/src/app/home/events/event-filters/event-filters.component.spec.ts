@@ -6,11 +6,10 @@ describe('EventFiltersComponent', () => {
   let component: EventFiltersComponent;
   let fixture: ComponentFixture<EventFiltersComponent>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventFiltersComponent]
-    })
-    .compileComponents();
+      imports: [EventFiltersComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EventFiltersComponent);
     component = fixture.componentInstance;

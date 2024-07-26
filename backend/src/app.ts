@@ -28,9 +28,7 @@ import morganLogger from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import empty_fields_to_null from './middleware/empty_fields_to_null';
-import simulateNetwork from './middleware/simulate_network';
 
-app.use(simulateNetwork); //TODO remove
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());

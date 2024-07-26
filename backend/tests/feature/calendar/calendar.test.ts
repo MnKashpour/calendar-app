@@ -3,96 +3,59 @@ import request from 'supertest';
 import knex from '../../../src/db/db';
 import app from '../../../src/app';
 import { AuthService } from '../../../src/modules/auth';
+import { truncateAllTables } from '../../truncate_db';
+import UserFactory from '../../../src/db/factory/user_factory';
+import EventFactory from '../../../src/db/factory/event_factory';
+import { User } from '../../../src/modules/user';
+import { Calendar } from '../../../src/modules/calendar';
+import { Event } from '../../../src/modules/event';
 
 beforeAll(async () => {
-  await knex.migrate.latest({ directory: './src/db/migrations' });
+  await truncateAllTables(knex);
   await setup();
 });
-
 afterAll(async () => {
-  await knex.destroy();
+  knex.destroy();
 });
 
-let authUser;
-let user;
-let token;
-let calendar;
-let event;
+let authUser: User;
+let token: string;
+let calendar: Calendar;
+let event: Event;
 
 async function setup() {
-  [authUser] = await knex('users')
-    .insert({
-      first_name: 'first',
-      last_name: 'last',
-      email: 'mohanned.kashpour@gmail.com',
-      password: await AuthService.hashPassword('123456'),
-      status: 'active',
-    })
-    .returning('*');
-
-  [calendar] = await knex('calendars')
-    .insert({
-      name: 'Calendar',
-    })
-    .returning('*');
-
-  await knex('calendar_user').insert({
-    calendarId: calendar.id,
-    userId: authUser.id,
-    role: 'owner',
-    status: 'accepted',
-  });
-
-  [event] = await knex('events')
-    .insert({
-      title: 'event title',
-      location: 'location',
-      allDay: false,
-      start: new Date().toISOString(),
-      end: new Date().toISOString(),
-      color: 'red',
-      icon: 'tuiIconShoppingCart',
-      note: 'Note',
-    })
-    .returning('*');
-
-  await knex('event_user').insert({
-    eventId: event.id,
-    userId: authUser.id,
-    role: 'owner',
-    status: 'accepted',
-  });
-
-  await knex('calendar_event').insert({
-    calendarId: calendar.id,
-    userId: authUser.id,
-  });
+  [{ user: authUser, calendar }] = await new UserFactory().make(knex);
+  [event] = await new EventFactory().make(knex, authUser);
 
   token = await AuthService.getJwtToken(authUser.id);
 }
 
-describe('GET /calendars', () => {
+describe('GET /api/calendars', () => {
   it('can get calendars', async () => {
     await request(app)
-      .get(`/calendars`)
+      .get(`/api/calendars`)
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });
 });
 
-describe('GET /calendars/:id', () => {
+describe('GET /api/calendars/:id', () => {
   it('can get calendar by id', async () => {
     await request(app)
-      .get(`/calendars/${calendar.id}`)
+      .get(`/api/calendars/${calendar.id}`)
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });
 });
 
-describe('GET /calendars/:id/events', () => {
+describe('GET /api/calendars/:id/events', () => {
   it('can get all events in a month of calendar by id', async () => {
-    await request(app)
-      .get(`/calendars/${calendar.id}/events`)
+    const res = await request(app)
+      .get(`/api/calendars/${calendar.id}/events`)
+      .query({
+        year: 2024,
+        month: 7,
+      })
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });

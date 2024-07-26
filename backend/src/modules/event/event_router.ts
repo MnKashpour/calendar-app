@@ -97,7 +97,7 @@ router.put(
 
     await EventService.updateEvent(eventId, body);
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: 'Updated Successfully',
     });
   })
@@ -125,7 +125,7 @@ router.delete(
 
     await EventService.deleteEvent(eventId);
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: 'Updated Successfully',
     });
   })

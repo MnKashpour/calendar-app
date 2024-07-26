@@ -20,4 +20,5 @@ switch (process.env.NODE_ENV) {
 }
 
 const options = knexStringCase(config);
+
 export default knex(options);

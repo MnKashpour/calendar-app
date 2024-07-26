@@ -5,7 +5,7 @@ import { LogoutService } from './logout.service';
 describe('LogoutService', () => {
   let service: LogoutService;
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(LogoutService);
   });

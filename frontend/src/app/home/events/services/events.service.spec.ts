@@ -5,7 +5,7 @@ import { EventsService } from './events.service';
 describe('EventsService', () => {
   let service: EventsService;
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(EventsService);
   });

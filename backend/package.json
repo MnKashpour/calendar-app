@@ -8,9 +8,20 @@
     "build": "npx tsc",
     "dev": "nodemon src/index.ts",
     "test": "jest",
+    "test:migrate": "NODE_ENV=test npx knex migrate:latest --knexfile=src/db/knexfile.ts",
+    "seed:make": "npx knex seed:make --knexfile=src/db/knexfile.ts",
     "migrate:make": "npx knex migrate:make --knexfile=src/db/knexfile.ts",
     "migrate": "npx knex migrate:latest --knexfile=src/db/knexfile.ts",
     "migrate:rollback": "npx knex migrate:rollback --knexfile=src/db/knexfile.ts"
+  },
+  "pg": {
+    "test": {
+      "migrationsScript": [
+        "npm",
+        "run",
+        "migrations:test"
+      ]
+    }
   },
   "dependencies": {
     "@sinclair/typebox": "^0.32.34",
@@ -33,6 +44,7 @@
     "@babel/core": "^7.24.9",
     "@babel/preset-env": "^7.24.8",
     "@babel/preset-typescript": "^7.24.7",
+    "@faker-js/faker": "^8.4.1",
     "@jest/globals": "^29.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/colors": "^1.2.1",

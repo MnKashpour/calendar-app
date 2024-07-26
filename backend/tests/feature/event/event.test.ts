@@ -1,79 +1,56 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import request from 'supertest';
 import knex from '../../../src/db/db';
+import EventFactory from '../../../src/db/factory/event_factory';
+import UserFactory from '../../../src/db/factory/user_factory';
 import app from '../../../src/app';
 import { AuthService } from '../../../src/modules/auth';
+import { truncateAllTables } from '../../truncate_db';
+import { User } from '../../../src/modules/user';
+import { Event } from '../../../src/modules/event';
 
 beforeAll(async () => {
-  await knex.migrate.latest({ directory: './src/db/migrations' });
+  await truncateAllTables(knex);
   await setup();
 });
-
 afterAll(async () => {
-  await knex.destroy();
+  knex.destroy();
 });
 
-let authUser;
-let user;
-let token;
-let event;
+let authUser: User;
+let user: User;
+let token: string;
+let event: Event;
 
 async function setup() {
-  [authUser] = await knex('users')
-    .insert({
-      first_name: 'first',
-      last_name: 'last',
-      email: 'mohanned.kashpour@gmail.com',
-      password: await AuthService.hashPassword('123456'),
-      status: 'active',
-    })
-    .returning('*');
-
-  [event] = await knex('events')
-    .insert({
-      title: 'event title',
-      location: 'location',
-      allDay: false,
-      start: new Date().toISOString(),
-      end: new Date().toISOString(),
-      color: 'red',
-      icon: 'tuiIconShoppingCart',
-      note: 'Note',
-    })
-    .returning('*');
-
-  await knex('event_user').insert({
-    eventId: event.id,
-    userId: authUser.id,
-    role: 'owner',
-    status: 'accepted',
-  });
+  [{ user: authUser }] = await new UserFactory().make(knex);
+  [event] = await new EventFactory().make(knex, authUser);
 
   token = await AuthService.getJwtToken(authUser.id);
 }
 
-describe('GET /events', () => {
+describe('GET /api/events', () => {
   it('can get events paginated', async () => {
     await request(app)
-      .get(`/events`)
+      .get(`/api/events`)
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });
 });
 
-describe('GET /events/:id', () => {
+describe('GET /api/events/:id', () => {
   it('can get event by id', async () => {
     await request(app)
-      .get(`/events/${event.id}`)
+      .get(`/api/events/${event.id}`)
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });
 });
 
-describe('POST /events', () => {
+describe('POST /api/events', () => {
   it('can create event', async () => {
     await request(app)
-      .post(`/events`)
+      .post(`/api/events`)
       .set({ Authorization: `Bearer ${token}` })
       .send({
         title: 'event title',
@@ -89,10 +66,10 @@ describe('POST /events', () => {
   });
 });
 
-describe('PUT /events/:id', () => {
+describe('PUT /api/events/:id', () => {
   it('can update event', async () => {
     await request(app)
-      .put(`/events/${event.id}`)
+      .put(`/api/events/${event.id}`)
       .set({ Authorization: `Bearer ${token}` })
       .send({
         title: 'event title',
@@ -108,10 +85,10 @@ describe('PUT /events/:id', () => {
   });
 });
 
-describe('DELETE /events/:id', () => {
+describe('DELETE /api/events/:id', () => {
   it('can delete event', async () => {
     await request(app)
-      .delete(`/events/${event.id}`)
+      .delete(`/api/events/${event.id}`)
       .set({ Authorization: `Bearer ${token}` })
       .expect(200);
   });

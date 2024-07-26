@@ -5,7 +5,7 @@ import { CalendarService } from './calendar.service';
 describe('CalendarService', () => {
   let service: CalendarService;
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(CalendarService);
   });

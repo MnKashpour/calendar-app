@@ -1,4 +1,4 @@
-import { Type, type Static } from '@sinclair/typebox';
+import { TString, Type, type Static } from '@sinclair/typebox';
 import { eventColors, eventIcons } from '../../utils/constants';
 
 // Event user role
@@ -29,7 +29,10 @@ export const EventSchema = Type.Object({
   createdAt: Type.Date(),
   updatedAt: Type.Date(),
 });
-export type Event = Static<typeof EventSchema>;
+export type Event = Omit<Static<typeof EventSchema>, 'color' | 'icon'> & {
+  color: string;
+  icon: string;
+};
 export type EventField = keyof Event;
 
 // Event Create & Update Schema

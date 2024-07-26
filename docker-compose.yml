@@ -1,18 +1,25 @@
 services:
   postgres:
+    container_name: postgres
     image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports: 
-      - '2345:5432'
+    ports:
+      - '5432:5432'
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - calendar-database:/var/lib/postgresql/data
+    networks:
+      - private
 
   calendar-backend:
+    container_name: backend
     image: calendar-backend:latest
+    command: >
+      sh -c "npm run migrate && 
+             npm start"
     env_file:
       - path: backend/.env
     environment:
@@ -25,19 +32,34 @@ services:
       DATABASE_USER: postgres
       DATABASE_USER_PASSWORD: postgres
       DATABASE_ENABLE_SSL: false
-      JWT_SECRET: obxJKoasd1fa56FG7yhsWg53vxgtr98vhqew98UH38s
+      TEST_DATABASE_HOST: postgres
+      TEST_DATABASE_PORT: 5432
+      TEST_DATABASE_NAME: personal_calendar_test
+      TEST_DATABASE_USER: postgres
+      TEST_DATABASE_USER_PASSWORD: postgres
+      TEST_DATABASE_ENABLE_SSL: false
+      JWT_SECRET: obxJKoasd1fa5asdf6FG7yhsWg53vxgtr98vhqew98UH38s
       JWT_EXPIRE: 7d
     depends_on:
       - postgres
     ports:
       - '3000:3000'
+    networks:
+      - public
+      - private
 
   calendar-frontend:
+    container_name: frontend
     image: calendar-frontend:latest
     ports:
       - '4200:4200'
-    depends_on:
-      - calendar-backend 
+    networks:
+      - public
+
+networks:
+  public:
+  private:
+
 
 volumes:
   calendar-database:

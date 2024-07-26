@@ -5,7 +5,7 @@ import { NetworkErrorHandlerService } from './network-error-handler.service';
 describe('NetworkErrorHandlerService', () => {
   let service: NetworkErrorHandlerService;
 
-  beforeEach(() => {
+  beforeAll(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(NetworkErrorHandlerService);
   });

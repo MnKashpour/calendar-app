@@ -6,11 +6,10 @@ describe('EventFormComponent', () => {
   let component: EventFormComponent;
   let fixture: ComponentFixture<EventFormComponent>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventFormComponent]
-    })
-    .compileComponents();
+      imports: [EventFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EventFormComponent);
     component = fixture.componentInstance;

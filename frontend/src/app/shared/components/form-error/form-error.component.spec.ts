@@ -6,11 +6,10 @@ describe('FormErrorComponent', () => {
   let component: FormErrorComponent;
   let fixture: ComponentFixture<FormErrorComponent>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormErrorComponent]
-    })
-    .compileComponents();
+      imports: [FormErrorComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormErrorComponent);
     component = fixture.componentInstance;
