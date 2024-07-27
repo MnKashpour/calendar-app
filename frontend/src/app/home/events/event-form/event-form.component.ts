@@ -21,7 +21,7 @@ import {
   TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { TuiDay, TuiTime } from '@taiga-ui/cdk';
+import { TuiAutoFocusModule, TuiDay, TuiTime } from '@taiga-ui/cdk';
 import {
   convertDateToTuiDay,
   convertDateToTuiTime,
@@ -71,6 +71,7 @@ type EventFormGroup = FormGroup<{
     TuiInputTimeModule,
     TuiSvgModule,
     TuiTextareaModule,
+    TuiAutoFocusModule,
   ],
   templateUrl: './event-form.component.html',
   styleUrl: './event-form.component.css',

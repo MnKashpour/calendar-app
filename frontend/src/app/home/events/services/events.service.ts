@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environment';
+import { environment } from '../../../../environments/environment';
 import { Paginated } from '../../../shared/interfaces/paginated.interface';
 import { EventInterface } from '../interfaces/event.interface';
 import { setQueryString } from '../../../shared/helpers';
@@ -17,7 +17,7 @@ export class EventsService {
   constructor() {}
 
   http = inject(HttpClient);
-  baseApi = environment.baseUrl;
+  baseApi = environment.apiUrl;
 
   index(
     page?: number,

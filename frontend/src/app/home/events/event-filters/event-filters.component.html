@@ -7,9 +7,10 @@
         formControlName="search"
         type="search"
         [tuiTextfieldCleaner]="true"
+        tuiTextfieldIcon="tuiIconSearch"
       >
         Search
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" autocomplete="event-title" />
       </tui-input>
       <app-form-error [control]="form.controls['search']"></app-form-error>
     </div>

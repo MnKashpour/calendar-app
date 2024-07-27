@@ -1,13 +1,29 @@
 services:
+  nginx: 
+    image: nginx:1.27.0
+    container_name: server
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+    environment:
+      SERVER_FRONTEND_URL: 'http://calendar-frontend:4000'
+      SERVER_BACKEND_URL: 'http://calendar-backend:5000'
+    ports:
+      - 80:80
+    depends_on:
+      - calendar-frontend
+      - calendar-backend
+    networks:
+      - public
+
   postgres:
     container_name: postgres
-    image: postgres:latest
+    image: postgres:16.3
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - '5432:5432'
+      - '5432'
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - calendar-database:/var/lib/postgresql/data
@@ -19,12 +35,10 @@ services:
     image: calendar-backend:latest
     command: >
       sh -c "npm run migrate && 
-             npm start"
-    env_file:
-      - path: backend/.env
+             npm run pm2"
     environment:
       NODE_ENV: development
-      PORT: 3000
+      PORT: 5000
       DATABASE_CLIENT: postgresql
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
@@ -43,7 +57,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - '3000:3000'
+      - '5000'
     networks:
       - public
       - private
@@ -51,15 +65,16 @@ services:
   calendar-frontend:
     container_name: frontend
     image: calendar-frontend:latest
+    environment:
+      FRONT_END_PORT: 4000
     ports:
-      - '4200:4200'
+      - '4000'
     networks:
       - public
 
 networks:
   public:
   private:
-
 
 volumes:
   calendar-database:

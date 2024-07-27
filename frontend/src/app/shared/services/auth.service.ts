@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { UserInterface } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environment';
+import { environment } from '../../../environments/environment';
 
 type AuthState = 'signedIn' | 'signedOut' | 'unknown';
 
@@ -26,7 +26,7 @@ export class AuthService {
 
   http = inject(HttpClient);
 
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.apiUrl;
 
   private token$ = signal<string | undefined | null>(undefined);
   token = computed(() => this.token$());

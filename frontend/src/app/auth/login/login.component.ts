@@ -19,6 +19,7 @@ import {
 import { FormErrorFormatterPipe } from '../../shared/pipes/form-error-formatter.pipe';
 import { NetworkErrorHandlerService } from '../../shared/services/network-error-handler.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-login',
@@ -35,6 +36,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     TuiLoaderModule,
     TuiLinkModule,
     TuiNotificationModule,
+    TuiAutoFocusModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',

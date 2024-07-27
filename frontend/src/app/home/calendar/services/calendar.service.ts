@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environment';
+import { environment } from '../../../../environments/environment';
 import { CalendarInterface } from '../interfaces/calendar.interface';
 import { EventInterface } from '../../events/interfaces/event.interface';
 import { setQueryString } from '../../../shared/helpers';
@@ -13,7 +13,7 @@ export class CalendarService {
   constructor() {}
 
   http = inject(HttpClient);
-  baseApi = environment.baseUrl;
+  baseApi = environment.apiUrl;
 
   getEventsOfCalendarInMonth(calendarId: number, year: number, month: number) {
     return this.http

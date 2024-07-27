@@ -1,9 +1,9 @@
 <div>
   <form [formGroup]="form" [id]="formId" (submit)="onSubmit()">
     <div class="mb-5">
-      <tui-input formControlName="title" type="title">
+      <tui-input formControlName="title" type="title" tuiAutoFocus>
         Title*
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" autocomplete="event-title" autocapitalize="words"/>
       </tui-input>
       <app-form-error [control]="form.controls.title"></app-form-error>
     </div>
@@ -11,7 +11,7 @@
     <div class="mb-5">
       <tui-input formControlName="location" type="location">
         Location
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" autocomplete="event-location" autocapitalize="on"/>
       </tui-input>
       <app-form-error [control]="form.controls.location"></app-form-error>
     </div>

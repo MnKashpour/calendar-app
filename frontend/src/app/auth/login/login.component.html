@@ -23,7 +23,10 @@
             <div class="tui-island__paragraph tui-island__paragraph_link mb-4">
               <div class="tui-form__row">
                 <p>
-                  <tui-input formControlName="email">Email</tui-input>
+                  <tui-input formControlName="email">
+                    Email
+                    <input tuiTextfield type="email" autocomplete="email" />
+                  </tui-input>
                 </p>
                 <p
                   *ngIf="

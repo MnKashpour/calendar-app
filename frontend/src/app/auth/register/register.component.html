@@ -14,12 +14,17 @@
             <h3 class="tui-island__title">Register</h3>
             <p class="tui-island__paragraph">
               Do you already have an account ?
-              <a tuiLink [routerLink]="['/auth/login']"><span class="hover:font-semibold"> Login </span></a>
+              <a tuiLink [routerLink]="['/auth/login']"
+                ><span class="hover:font-semibold"> Login </span></a
+              >
             </p>
             <div class="tui-island__paragraph tui-island__paragraph_link mb-7">
               <div class="tui-form__row">
                 <p>
-                  <tui-input formControlName="email">Email</tui-input>
+                  <tui-input formControlName="email">
+                    Email
+                    <input tuiTextfield type="email" autocomplete="email" />
+                  </tui-input>
                 </p>
                 <p
                   *ngIf="
@@ -36,6 +41,7 @@
                 <p>
                   <tui-input formControlName="firstName">
                     First Name
+                    <input tuiTextfield type="text" autocomplete="first-name" autocapitalize="words" />
                   </tui-input>
                 </p>
                 <p
@@ -53,7 +59,10 @@
 
               <div class="tui-form__row">
                 <p>
-                  <tui-input formControlName="lastName"> Last Name </tui-input>
+                  <tui-input formControlName="lastName"> 
+                    Last Name 
+                    <input tuiTextfield type="text" autocomplete="last-name" autocapitalize="words" />
+                  </tui-input>
                 </p>
                 <p
                   *ngIf="

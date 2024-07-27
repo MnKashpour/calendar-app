@@ -25,6 +25,7 @@ import {
   TuiLoaderModule,
 } from '@taiga-ui/core';
 import { NetworkErrorHandlerService } from '../../shared/services/network-error-handler.service';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-register',
@@ -41,6 +42,7 @@ import { NetworkErrorHandlerService } from '../../shared/services/network-error-
     TuiIslandModule,
     TuiMarkerIconModule,
     TuiLoaderModule,
+    TuiAutoFocusModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',

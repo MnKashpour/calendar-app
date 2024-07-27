@@ -1,4 +1,5 @@
-FROM node:22.5.1-alpine3.20
+# STAGE 1: build
+FROM node:22.5.1-alpine3.20 AS build
 
 RUN mkdir -p /frontend
 WORKDIR /frontend
@@ -13,4 +14,11 @@ COPY frontend/tsconfig.json .
 
 RUN npm run build
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+# STAGE 2: nginx
+FROM nginxinc/nginx-unprivileged
+
+COPY frontend/nginx.conf /etc/nginx/templates/default.conf.template
+
+COPY --from=build /frontend/dist/frontend/browser /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
