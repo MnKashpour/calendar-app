@@ -81,6 +81,15 @@ class UserService {
     const user = await UserDAL.findUserByEmail(email);
     return !!user;
   }
+
+  /**
+   * Get events of user
+   */
+  async getUsersOfEvent(eventId: number) {
+    return (await UserDAL.getUsersOfEvent(eventId)).map((ele) =>
+      omitSensitiveFields(ele, UserDAL.sensitiveFields)
+    );
+  }
 }
 
 export default new UserService();

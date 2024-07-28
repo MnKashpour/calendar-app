@@ -41,6 +41,15 @@ class UserDAL {
       status: data.status,
     });
   }
+
+  /**
+   * Get users of event
+   */
+  async getUsersOfEvent(eventId: number) {
+    return await userModel()
+      .join('event_user', 'event_user.user_id', 'users.id')
+      .where('event_id', eventId);
+  }
 }
 
 export default new UserDAL();

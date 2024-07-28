@@ -1,3 +1,4 @@
+import InvalidDataError from '../../utils/errors/invalid_data_error';
 import NotFoundError from '../../utils/errors/not_found_error';
 import { omitSensitiveFields, PaginatedData } from '../../utils/helper';
 import { calendarService } from '../calendar';
@@ -62,7 +63,7 @@ class EventService {
    * Check if the user has a specific role in the event
    */
   async userHasEventRole(userId: number, eventId: number, roles: types.EventUserRole[]) {
-    const role = await EventDAL.getUserRoleOfEvent(userId, eventId);
+    const role = (await EventDAL.getEventUser(userId, eventId))?.role;
 
     return role && roles.includes(role);
   }
@@ -100,6 +101,82 @@ class EventService {
     return (await EventDAL.getEventsOfCalendarInMonth(calendarId, year, month)).map((ele) =>
       omitSensitiveFields(ele, EventDAL.sensitiveFields)
     );
+  }
+
+  /**
+   * Add user to event
+   */
+  async addUserToEvent(eventId: number, userId: number, role: types.EventUserRole) {
+    const eventUser = await EventDAL.getEventUser(userId, eventId);
+
+    if (eventUser) {
+      throw new InvalidDataError('The user is already invited!', []);
+    }
+
+    await EventDAL.addEventUser({
+      eventId: eventId,
+      userId: userId,
+      status: 'pending',
+      role: role,
+    });
+  }
+
+  /**
+   * update user event role
+   */
+  async updateUserEventRole(eventId: number, userId: number, role: types.EventUserRole) {
+    const eventUser = await EventDAL.getEventUser(userId, eventId);
+
+    if (!eventUser) {
+      throw new NotFoundError('User not found in the event');
+    }
+
+    await EventDAL.updateEventUser(eventId, userId, {
+      role: role,
+    });
+  }
+
+  /**
+   * List all pending events for user
+   */
+  async getPendingEvents(userId: number) {
+    const events = await EventDAL.listPendingEvents(userId);
+
+    return events.map((ele) => omitSensitiveFields(ele, EventDAL.sensitiveFields));
+  }
+
+  /**
+   * Accept an invite
+   */
+  async acceptEventInvite(eventId: number, userId: number) {
+    const eventUser = await EventDAL.getEventUser(userId, eventId);
+
+    if (!eventUser || eventUser.status != 'pending') {
+      throw new NotFoundError('User not found in the event');
+    }
+
+    const calendarId = await calendarService.getDefaultCalendarIdForUser(userId);
+
+    await EventDAL.updateEventUser(eventId, userId, {
+      status: 'accepted',
+    });
+    await EventDAL.addEventToCalendar(eventId, calendarId!);
+  }
+
+  /**
+   * Delete user event
+   */
+  async deleteUserEvent(eventId: number, userId: number) {
+    const eventUser = await EventDAL.getEventUser(userId, eventId);
+
+    if (!eventUser) {
+      throw new NotFoundError('User not found in the event');
+    }
+
+    const calendarId = await calendarService.getDefaultCalendarIdForUser(userId);
+
+    await EventDAL.deleteEventUser(eventId, userId);
+    await EventDAL.removeEventFromCalendar(eventId, calendarId!);
   }
 }
 

@@ -1,5 +1,5 @@
 services:
-  nginx: 
+  nginx:
     image: nginx:1.27.0
     container_name: server
     volumes:
@@ -31,6 +31,8 @@ services:
       - private
 
   calendar-backend:
+    build:
+      dockerfile: ./backend/Dockerfile
     container_name: backend
     image: calendar-backend:latest
     command: >
@@ -63,6 +65,8 @@ services:
       - private
 
   calendar-frontend:
+    build:
+      dockerfile: ./frontend/Dockerfile
     container_name: frontend
     image: calendar-frontend:latest
     environment:
@@ -75,6 +79,7 @@ services:
 networks:
   public:
   private:
+
 
 volumes:
   calendar-database:

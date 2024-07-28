@@ -102,18 +102,8 @@ class EventDAL {
   /**
    * Get the user role in specific event
    */
-  async getUserRoleOfEvent(userId: number, eventId: number) {
-    const results = await eventUserModel()
-      .select('role')
-      .where('user_id', userId)
-      .where('event_id', eventId)
-      .where('status', 'accepted');
-
-    if (results.length == 0) {
-      return null;
-    }
-
-    return results[0].role;
+  async getEventUser(userId: number, eventId: number) {
+    return await eventUserModel().where('user_id', userId).where('event_id', eventId).first();
   }
 
   /**
@@ -140,6 +130,57 @@ class EventDAL {
       .whereRaw('EXTRACT(MONTH FROM events.start::date) = ?', [+month])
       .whereRaw('EXTRACT(YEAR FROM events.start::date) = ?', [+year])
       .select('events.*');
+  }
+
+  /**
+   * Get all pending events
+   */
+  async listPendingEvents(userId: number) {
+    return await eventModel()
+      .join('event_user', 'event_user.event_id', 'events.id')
+      .where('event_user.user_id', userId)
+      .where('event_user.status', 'pending');
+  }
+
+  /**
+   * Add event user
+   */
+  async addEventUser(data: types.EventUser) {
+    return await eventUserModel().insert(data);
+  }
+
+  /**
+   * Update event user data
+   */
+  async updateEventUser(eventId: number, userId: number, data: Partial<types.EventUser>) {
+    return await eventUserModel()
+      .where('event_user.user_id', userId)
+      .where('event_user.event_id', eventId)
+      .update(data);
+  }
+
+  /**
+   * Delete event user
+   */
+  async deleteEventUser(eventId: number, userId: number) {
+    await eventUserModel()
+      .where('event_user.user_id', userId)
+      .where('event_user.event_id', eventId)
+      .delete();
+  }
+
+  /**
+   * Register an event in a calendar
+   */
+  async addEventToCalendar(eventId: number, calendarId: number) {
+    await calendarEventModel().insert({ calendarId, eventId });
+  }
+
+  /**
+   * Remove an event from a calendar
+   */
+  async removeEventFromCalendar(eventId: number, calendarId: number) {
+    await calendarEventModel().where('calendar_id', calendarId).where('event_id', eventId).delete();
   }
 
   // join of events and event_user

@@ -2,7 +2,7 @@ import { Type, type Static } from '@sinclair/typebox';
 
 // calendar user role
 export type CalendarUserRole = 'owner' | 'viewer';
-export type CalendarUserStatus = 'accepted' | 'rejected' | 'pending';
+export type CalendarUserStatus = 'accepted' | 'pending';
 export type CalendarUser = {
   calendarId: number;
   userId: number;

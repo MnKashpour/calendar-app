@@ -3,7 +3,7 @@ import { eventColors, eventIcons } from '../../utils/constants';
 
 // Event user role
 export type EventUserRole = 'owner' | 'writer' | 'viewer';
-export type EventUserStatus = 'accepted' | 'rejected' | 'pending';
+export type EventUserStatus = 'accepted' | 'pending';
 export type EventUser = {
   eventId: number;
   userId: number;
@@ -70,3 +70,16 @@ export const GetEventQueryParamsSchema = Type.Object({
   pageSize: Type.Optional(Type.Integer({ minimum: 1, maximum: 30 })),
 });
 export type GetEventQueryParams = Static<typeof GetEventQueryParamsSchema>;
+
+// Add event user schema
+export const AddEventUserInputSchema = Type.Object({
+  email: Type.String({ format: 'email', maxLength: 255 }),
+  role: Type.Enum({ viewer: 'viewer', writer: 'writer' }),
+});
+export type AddEventUserInput = Static<typeof AddEventUserInputSchema>;
+
+// Update event user role schema
+export const UpdateEventUserRoleInputSchema = Type.Object({
+  role: Type.Enum({ viewer: 'viewer', writer: 'writer' }),
+});
+export type UpdateEventUserRoleInput = Static<typeof UpdateEventUserRoleInputSchema>;
