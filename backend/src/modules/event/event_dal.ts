@@ -48,7 +48,7 @@ class EventDAL {
     const events = await eventQuery
       .limit(pageSize)
       .offset(offset)
-      .select('events.*', 'event_user.role as user_role');
+      .select('events.*', 'event_user.role as user_role', 'event_user.status as user_status');
 
     return {
       data: events as types.Event[],
@@ -67,9 +67,9 @@ class EventDAL {
    * Get event by id that a specific user has access to
    */
   async getEventByIdForUser(userId: number, id: number) {
-    return await this.eventsOfUserQuery(userId)
+    return await this.eventsOfUserQuery(userId, false)
       .where('id', id)
-      .select('events.*', 'event_user.role as user_role')
+      .select('events.*', 'event_user.role as user_role', 'event_user.status as user_status')
       .first();
   }
 
@@ -139,7 +139,8 @@ class EventDAL {
     return await eventModel()
       .join('event_user', 'event_user.event_id', 'events.id')
       .where('event_user.user_id', userId)
-      .where('event_user.status', 'pending');
+      .where('event_user.status', 'pending')
+      .select('events.*', 'event_user.status as user_status', 'event_user.role as user_role');
   }
 
   /**

@@ -1,0 +1,128 @@
+<tui-loader [showLoader]="isLoading" [overlay]="true">
+  <div>
+    <div class="flex flex-row items-center justify-between mb-5">
+      <h3 class="text-lg font-semibold">People</h3>
+      <button type="button" (click)="toggleShowAddUserForm()">
+        <tui-svg
+          *ngIf="showAddUserForm"
+          src="tuiIconUserMinusLarge"
+          class="text-red-600"
+        ></tui-svg>
+        <tui-svg *ngIf="!showAddUserForm" src="tuiIconUserPlusLarge"></tui-svg>
+      </button>
+    </div>
+
+    <div class="mb-3">
+      <form
+        *ngIf="showAddUserForm"
+        [formGroup]="addUserForm"
+        (submit)="addUser()"
+        class="flex flex-row items-center mb-2 space-x-2"
+      >
+        <div class="basis-8/12">
+          <tui-input formControlName="email" type="email" tuiAutoFocus>
+            Email
+            <input
+              tuiTextfield
+              type="email"
+              autocomplete="email"
+              autocapitalize="off"
+            />
+          </tui-input>
+        </div>
+
+        <div class="basis-3/12">
+          <tui-select formControlName="role" [valueContent]="roleSelect">
+            Role
+            <ng-template tuiDataList>
+              <tui-data-list>
+                <button
+                  *ngFor="let item of ['writer', 'viewer']"
+                  tuiOption
+                  [value]="item"
+                >
+                  <ng-container
+                    *ngTemplateOutlet="roleSelect; context: { $implicit: item }"
+                  ></ng-container>
+                </button>
+              </tui-data-list>
+            </ng-template>
+          </tui-select>
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-green-700 hover:bg-green-800 font-medium rounded-xl text-sm py-4 basis-1/12 shadow-md shadow-gray-400"
+        >
+          Add
+        </button>
+      </form>
+      <div *ngIf="addUserForm.touched">
+        <app-form-error [control]="addUserForm.controls.email"></app-form-error>
+        <app-form-error [control]="addUserForm.controls.role"></app-form-error>
+      </div>
+    </div>
+
+    <tui-scrollbar class="mb-3 max-h-[202px]" [hidden]="true">
+      <div class="space-y-3">
+        <div *ngFor="let user of users" class="flex flex-row justify-between">
+          <div class="space-x-1 line-clamp-1 me-3">
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
+            <span
+              *ngIf="authService.user()!.id == user.id"
+              class="font-semibold"
+              >(You)</span
+            >
+          </div>
+
+          <div class="flex flex-row items-center space-x-2">
+            <button
+              *ngIf="user.userRole != 'owner'"
+              type="button"
+              (click)="deleteEventUser(user.id)"
+            >
+              <tui-svg src="tuiIconTrash2" class="text-red-600"></tui-svg>
+            </button>
+
+            <div
+              class="w-min px-2 rounded-md bg-gray-200 text-black font-semibold"
+            >
+              <p *ngIf="user.userStatus != 'accepted'">{{ user.userStatus }}</p>
+            </div>
+
+            <select
+              #rolesInput
+              (change)="updateUserRole(user.id, rolesInput.value)"
+              class="cursor-pointer border border-gray-400 rounded-md"
+            >
+              <option
+                *ngIf="user.userRole == 'owner'"
+                [selected]="user.userRole == 'owner'"
+                value="owner"
+              >
+                Owner
+              </option>
+              <option
+                *ngIf="user.userRole != 'owner'"
+                [selected]="user.userRole == 'writer'"
+                value="writer"
+              >
+                Writer
+              </option>
+              <option
+                *ngIf="user.userRole != 'owner'"
+                [selected]="user.userRole == 'viewer'"
+                value="viewer"
+              >
+                Viewer
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </tui-scrollbar>
+  </div>
+</tui-loader>
+<ng-template #roleSelect let-item>
+  <span>{{ item | titlecase }}</span>
+</ng-template>

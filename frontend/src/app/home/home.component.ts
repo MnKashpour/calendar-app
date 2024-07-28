@@ -17,8 +17,8 @@ export class HomeComponent {
   router = inject(Router);
 
   ngOnInit() {
-    this.router.navigateByUrl(
-      `calendars/${this.authService.user()!.defaultCalendarId}`
-    );
+    // this.router.navigateByUrl(
+    //   `calendars/${this.authService.user()!.defaultCalendarId}`
+    // );
   }
 }

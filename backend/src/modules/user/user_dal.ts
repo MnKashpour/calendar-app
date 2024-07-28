@@ -48,7 +48,8 @@ class UserDAL {
   async getUsersOfEvent(eventId: number) {
     return await userModel()
       .join('event_user', 'event_user.user_id', 'users.id')
-      .where('event_id', eventId);
+      .where('event_id', eventId)
+      .select('users.*', 'event_user.role as user_role', 'event_user.status as user_status');
   }
 }
 

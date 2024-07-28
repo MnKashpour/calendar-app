@@ -4,4 +4,5 @@ export interface CalendarInterface {
   createdAt: Date;
   updatedAt: Date;
   userRole?: 'viewer' | 'writer' | 'owner';
+  userStatus?: 'pending' | 'accepted';
 }

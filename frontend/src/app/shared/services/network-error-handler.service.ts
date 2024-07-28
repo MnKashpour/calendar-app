@@ -82,7 +82,7 @@ export class NetworkErrorHandlerService {
       }
 
       control.setErrors({ backend: error.message });
-      control.markAsTouched();
+      control.markAllAsTouched();
     }
   }
 }

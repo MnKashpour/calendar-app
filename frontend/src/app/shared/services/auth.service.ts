@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { UserInterface } from '../interfaces/user.interface';
+import { AuthUserInterface } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
@@ -31,7 +31,7 @@ export class AuthService {
   private token$ = signal<string | undefined | null>(undefined);
   token = computed(() => this.token$());
 
-  private user$ = signal<UserInterface | undefined | null>(undefined);
+  private user$ = signal<AuthUserInterface | undefined | null>(undefined);
   user = computed(() => this.user$());
 
   authState = computed<AuthState>(() => {
@@ -43,7 +43,7 @@ export class AuthService {
   signedIn = computed(() => this.authState() === 'signedIn');
   signedOut = computed(() => this.authState() === 'signedOut');
 
-  setState(user: UserInterface | null, token: string | null) {
+  setState(user: AuthUserInterface | null, token: string | null) {
     if (user && token) {
       this.setLoginState(user, token);
     } else {
@@ -51,7 +51,7 @@ export class AuthService {
     }
   }
 
-  setLoginState(user: UserInterface, token: string) {
+  setLoginState(user: AuthUserInterface, token: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
     this.user$.set(user);
@@ -67,7 +67,7 @@ export class AuthService {
 
   updateMe() {
     this.http
-      .get<UserInterface>(`${this.baseUrl}/users/me`)
+      .get<AuthUserInterface>(`${this.baseUrl}/users/me`)
       .subscribe((user) => this.user$.set(user));
   }
 }

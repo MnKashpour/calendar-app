@@ -1,5 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
   TuiAlertService,
   TuiDialogContext,
@@ -8,7 +8,6 @@ import {
   TuiLoaderModule,
   TuiNotificationT,
 } from '@taiga-ui/core';
-import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { EventsService } from '../services/events.service';
 import { NetworkErrorHandlerService } from '../../../shared/services/network-error-handler.service';
 import { CommonModule } from '@angular/common';
@@ -17,14 +16,10 @@ import {
   EventFormComponent,
   updateEventFormValues,
 } from '../event-form/event-form.component';
-import {
-  convertDateToTuiDay,
-  convertDateToTuiTime,
-  convertToDateTimeLocalString,
-} from '../../../shared/helpers';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { EventInterface } from '../interfaces/event.interface';
+import { EventUsersComponent } from '../event-sharing/event-users/event-users.component';
 
 type ReceivedDataType = {
   eventId?: number;
@@ -40,6 +35,7 @@ type ReceivedDataType = {
     EventFormComponent,
     TuiDialogModule,
     TuiLoaderModule,
+    EventUsersComponent,
   ],
   templateUrl: './event-dialog.component.html',
   styleUrl: './event-dialog.component.css',
@@ -56,6 +52,7 @@ export class EventDialogComponent {
   isLoading = false;
 
   eventId?: number = this.context.data?.eventId;
+  event?: EventInterface;
   initialData? = this.context.data?.initialData;
 
   form = eventFormBuilder(this.fb);
@@ -82,10 +79,14 @@ export class EventDialogComponent {
   }
 
   fetchData() {
+    if (!this.eventId) return;
+
     this.isLoading = true;
+
     return this.eventsService.getEventById(this.eventId!).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.event = res;
         updateEventFormValues(this.form, res);
       },
       error: (error) => {
@@ -97,6 +98,8 @@ export class EventDialogComponent {
   }
 
   createEvent(data: any) {
+    if (this.eventId) return;
+
     this.isLoading = true;
 
     this.eventsService.createEvent(data).subscribe({
@@ -117,6 +120,8 @@ export class EventDialogComponent {
   }
 
   updateEvent(data: any) {
+    if (!this.eventId) return;
+
     this.isLoading = true;
 
     this.eventsService.updateEvent(this.eventId!, data).subscribe({
@@ -136,6 +141,8 @@ export class EventDialogComponent {
   }
 
   deleteEvent() {
+    if (!this.eventId) return;
+
     //TODO confirm
     // if (!confirm('Are you sure you want to delete this event?')) return;
 
@@ -145,6 +152,50 @@ export class EventDialogComponent {
       next: (response) => {
         this.isLoading = false;
         this.notification('Event Deleted Successfully', 'success');
+
+        this.context.completeWith(true);
+      },
+      error: (err) => {
+        this.networkErrorHandlerService.handleError(err, this.form);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  acceptEventInvite() {
+    if (!this.eventId) return;
+
+    this.isLoading = true;
+
+    this.eventsService.acceptEventInvite(this.eventId!).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.notification('Event add to you calendar successfully', 'success');
+
+        this.context.completeWith(true);
+      },
+      error: (err) => {
+        this.networkErrorHandlerService.handleError(err, this.form);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  deleteUserEvent() {
+    if (!this.eventId) return;
+
+    //TODO confirm
+    // if (!confirm('Are you sure you want to delete this event?')) return;
+
+    this.isLoading = true;
+
+    this.eventsService.deleteMeFromEvent(this.eventId!).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.notification(
+          'Event removed from calendar successfully',
+          'success'
+        );
 
         this.context.completeWith(true);
       },

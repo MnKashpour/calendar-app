@@ -6,6 +6,8 @@ import { authGuard } from './shared/guards/auth.guard';
 import { guestGuard } from './shared/guards/guest.guard';
 import { EventsComponent } from './home/events/events.component';
 import { CalendarComponent } from './home/calendar/calendar.component';
+import { AuthService } from './shared/services/auth.service';
+import { inject } from '@angular/core';
 
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent, canActivate: [guestGuard] },
@@ -21,6 +23,17 @@ export const routes: Routes = [
     children: [
       { path: 'calendars/:id', component: CalendarComponent },
       { path: 'events', component: EventsComponent },
+      {
+        path: '**',
+        redirectTo: (_) => {
+          const authService = inject(AuthService);
+          if (!authService.user()) {
+            return '/auth/login';
+          }
+
+          return `calendars/${authService.user()?.id}`;
+        },
+      },
     ],
   },
   { path: '**', pathMatch: 'full', redirectTo: '' },

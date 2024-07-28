@@ -32,7 +32,7 @@ services:
 
   calendar-backend:
     build:
-      dockerfile: ./backend/Dockerfile
+      context: backend
     container_name: backend
     image: calendar-backend:latest
     command: >
@@ -66,7 +66,7 @@ services:
 
   calendar-frontend:
     build:
-      dockerfile: ./frontend/Dockerfile
+      context: frontend
     container_name: frontend
     image: calendar-frontend:latest
     environment:

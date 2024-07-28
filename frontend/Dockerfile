@@ -6,18 +6,18 @@ WORKDIR /frontend
 
 RUN npm install -g @angular/cli
 
-COPY frontend/package.json frontend/package-lock.json ./
+COPY ./package.json ./package-lock.json ./
 RUN npm ci
 
-COPY frontend/. .
-COPY frontend/tsconfig.json .
+COPY . .
+COPY ./tsconfig.json .
 
 RUN npm run build
 
-# STAGE 2: nginx
+# STAGE 2: setup nginx
 FROM nginxinc/nginx-unprivileged
 
-COPY frontend/nginx.conf /etc/nginx/templates/default.conf.template
+COPY ./nginx.conf /etc/nginx/templates/default.conf.template
 
 COPY --from=build /frontend/dist/frontend/browser /usr/share/nginx/html
 

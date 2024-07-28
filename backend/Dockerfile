@@ -3,11 +3,11 @@ FROM node:20.16
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY backend/package.json backend/package-lock.json ./
+COPY ./package.json ./package-lock.json ./
 RUN npm install
 
-COPY backend/. .
-COPY backend/tsconfig.json .
+COPY . .
+COPY ./tsconfig.json .
 
 RUN npm run build
 

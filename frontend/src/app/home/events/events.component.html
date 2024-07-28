@@ -1,10 +1,21 @@
 <div class="px-8 py-6">
   <div class="flex flex-row justify-between items-center mb-5">
     <h1 class="text-3xl font-semibold">Events</h1>
-    <button (click)="showEventDialog()"
-      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-primary-blue motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-lg"
-      >New Event</button
-    >
+
+    <div class="flex flex-row items-center space-x-3">
+      <button
+        (click)="showPendingInvitesDialog()"
+        class="rounded-md px-6 py-2 font-semibold text-base text-white bg-gray-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-lg"
+      >
+        <span class="">{{ pendingInvites.length }}</span> Pending Invites
+      </button>
+      <button
+        (click)="showEventDialog()"
+        class="rounded-md px-6 py-2 font-semibold text-base text-white bg-primary-blue motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-lg"
+      >
+        New Event
+      </button>
+    </div>
   </div>
 
   <div class="border-t border-gray-400 mb-6 -mx-8"></div>
@@ -69,7 +80,9 @@
   ></tui-pagination>
 
   <ng-template #loading>
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4"
+    >
       <div
         class="h-56 rounded-lg"
         [class.tui-skeleton_light]="false"

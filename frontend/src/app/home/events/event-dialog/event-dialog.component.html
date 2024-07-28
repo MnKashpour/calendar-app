@@ -28,7 +28,14 @@
 
   }@else {
 
-  <h1 class="text-2xl mb-5 font-semibold">Event</h1>
+  <div class="flex flex-row items-center justify-between mb-5">
+    <h1 class="text-2xl font-semibold">Event</h1>
+    <div
+      class="w-min py-0.5 px-2 rounded-lg bg-gray-200 text-black font-semibold"
+    >
+      {{ event?.userRole | titlecase }}
+    </div>
+  </div>
   <div class="mb-5">
     <app-event-form
       [form]="form"
@@ -37,17 +44,21 @@
     ></app-event-form>
   </div>
 
-  <div class="flex flex-row justify-end items-center space-x-3">
-    <div class="grow">
-
-      <button
-      type="button"
-      (click)="deleteEvent()"
-      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-red-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
-      >
-      Delete
-    </button>
+  <div *ngIf="event && event.userRole == 'owner'" class="mb-5">
+    <app-event-users [event]="event"></app-event-users>
   </div>
+
+  <div class="flex flex-row justify-end items-center space-x-3">
+    <div class="grow" *ngIf="event?.userRole == 'owner'">
+      <button
+        type="button"
+        (click)="deleteEvent()"
+        class="rounded-md px-6 py-2 font-semibold text-base text-white bg-red-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+      >
+        Delete
+      </button>
+    </div>
+
     <button
       type="button"
       (click)="context.completeWith(false)"
@@ -55,7 +66,34 @@
     >
       Cancel
     </button>
+
     <button
+      *ngIf="event?.userRole != 'owner'"
+      type="button"
+      (click)="deleteUserEvent()"
+      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-red-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+    >
+      {{
+        event?.userStatus == "pending"
+          ? "Reject Invitation"
+          : "Remove from Calendar"
+      }}
+    </button>
+
+    <button
+      *ngIf="event?.userRole != 'owner' && event?.userStatus == 'pending'"
+      type="button"
+      (click)="acceptEventInvite()"
+      class="rounded-md px-6 py-2 font-semibold text-base text-white bg-green-600 motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"
+    >
+      Add to Calendar
+    </button>
+
+    <button
+      *ngIf="
+        (event?.userRole == 'owner' || event?.userRole == 'writer') &&
+        event?.userStatus == 'accepted'
+      "
       type="submit"
       form="form"
       class="rounded-md px-6 py-2 font-semibold text-base text-white bg-primary-blue motion-safe:hover:scale-[1.01] transition-all duration-250 hover:shadow-md"

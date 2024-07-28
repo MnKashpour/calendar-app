@@ -39,6 +39,7 @@ import {
   EventFiltersComponent,
   eventFiltersFormBuilder,
 } from './event-filters/event-filters.component';
+import { pendingInvitesDialogObs } from './pending-invites-dialog/pending-invites-dialog.component';
 
 @Component({
   selector: 'app-events',
@@ -71,6 +72,8 @@ export class EventsComponent {
   totalItems: number = 1;
   totalPages: number = 1;
 
+  pendingInvites: EventInterface[] = [];
+
   _refetchSub = new Subject<void>();
   refetch$ = this._refetchSub.asObservable();
 
@@ -84,6 +87,10 @@ export class EventsComponent {
     ),
     this.refetch$.pipe(startWith(null)),
   ]).pipe(switchMap((_, __) => this.fetchData()));
+
+  ngOnInit() {
+    this.fetchPendingInvites();
+  }
 
   pageChange(page: number) {
     this.currentPage = page;
@@ -115,6 +122,7 @@ export class EventsComponent {
           this.totalPages = res.totalPages;
         }),
         map((res) => res.data),
+        tap(() => setTimeout(() => this.changeDetectorRef.detectChanges())),
         catchError((error, _) => {
           this.isLoading = false;
           this.isError = true;
@@ -127,8 +135,20 @@ export class EventsComponent {
 
           return of([]);
         }),
-        finalize(() => this.changeDetectorRef.detectChanges())
+        finalize(() => setTimeout(() => this.changeDetectorRef.detectChanges()))
       );
+  }
+
+  fetchPendingInvites() {
+    return this.eventsService.getPendingInvites().subscribe({
+      next: (res) => {
+        this.pendingInvites = res;
+        console.log(res);
+      },
+      error: (error) => {
+        this.networkErrorHandlerService.handleError(error);
+      },
+    });
   }
 
   formatSort(sort: string | null) {
@@ -180,5 +200,18 @@ export class EventsComponent {
         }
       }
     );
+  }
+
+  showPendingInvitesDialog() {
+    return pendingInvitesDialogObs(
+      this.dialogService,
+      this.pendingInvites
+    ).subscribe({
+      next: (operationDone) => {
+        if (operationDone) {
+          this._refetchSub.next();
+        }
+      },
+    });
   }
 }

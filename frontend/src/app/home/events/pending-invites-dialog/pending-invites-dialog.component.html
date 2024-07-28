@@ -1,0 +1,37 @@
+<div>
+  <h1 class="mb-3 text-xl font-semibold">Pending Event Invites</h1>
+
+  <div *ngIf="events.length == 0">
+    You don't have any invites ′⌒`
+  </div>
+
+  <ng-container *ngFor="let event of events">
+    <div
+      (click)="showEventDialog(event.id)"
+      class="flex flex-row items-center justify-between rounded-md px-1 py-2 mb-2 cursor-pointer motion-safe:hover:scale-[1.01] motion-safe:hover:-translate-y-[1px] transition-all duration-250 hover:shadow-md"
+      [class]="'bg-' + event.color + '-200'"
+    >
+      <div class="flex flex-row items-center space-x-2">
+        <div class="">
+          <tui-svg [src]="event.icon"></tui-svg>
+        </div>
+        <span class="line-clamp-1">
+          {{ event.title }}
+        </span>
+      </div>
+
+      <div class="space-x-2">
+        <span *ngIf="!event.allDay" class="font-semibold">
+          {{ event.start.getFullYear() }}/{{
+            (event.start.getMonth() + 1).toString().padStart(2, "0")
+          }}/{{ event.start.getDate().toString().padStart(2, "0") }}
+        </span>
+        <span *ngIf="!event.allDay" class="font-semibold">
+          {{ event.start.getHours().toString().padStart(2, "0") }}:{{
+            event.start.getMinutes().toString().padStart(2, "0")
+          }}
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</div>

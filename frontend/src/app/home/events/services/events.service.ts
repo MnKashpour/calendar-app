@@ -57,7 +57,21 @@ export class EventsService {
   }
 
   deleteEvent(id: number) {
-    return this.http.delete<{ id: number }>(`${this.baseApi}/events/${id}`);
+    return this.http.delete(`${this.baseApi}/events/${id}`);
+  }
+
+  getPendingInvites() {
+    return this.http
+      .get<EventInterface[]>(`${this.baseApi}/events/invites/pending`, {})
+      .pipe(map((res) => res.map(this.eventMapper())));
+  }
+
+  acceptEventInvite(id: number) {
+    return this.http.put(`${this.baseApi}/events/${id}/invites/accept`, {});
+  }
+
+  deleteMeFromEvent(id: number) {
+    return this.http.delete(`${this.baseApi}/events/${id}/invite`);
   }
 
   private eventMapper() {

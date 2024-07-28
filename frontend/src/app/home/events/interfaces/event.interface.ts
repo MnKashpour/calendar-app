@@ -11,4 +11,5 @@ export interface EventInterface {
   createdAt: Date;
   updatedAt: Date;
   userRole?: 'viewer' | 'writer' | 'owner';
+  userStatus?: 'pending' | 'accepted';
 }

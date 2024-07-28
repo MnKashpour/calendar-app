@@ -105,7 +105,13 @@ export class CalendarComponent {
     return allDayEventsDialogObs(this.dialogService, {
       day: new Date(day.year, day.month - 1, day.day),
       data,
-    }).subscribe();
+    }).subscribe({
+      next: (operationDone) => {
+        if (operationDone) {
+          this.fetchData();
+        }
+      },
+    });
   }
 
   showEventDialog(eventId?: number, calendarDay?: CalendarDayType) {
@@ -118,7 +124,7 @@ export class CalendarComponent {
           now.getHours(),
           now.getMinutes()
         )
-      : undefined;
+      : new Date();
 
     eventDialogObs(this.dialogService, {
       eventId,
@@ -126,10 +132,12 @@ export class CalendarComponent {
         start: initialDate,
         end: initialDate,
       },
-    }).subscribe((operationDone) => {
-      if (operationDone) {
-        this.fetchData();
-      }
+    }).subscribe({
+      next: (operationDone) => {
+        if (operationDone) {
+          this.fetchData();
+        }
+      },
     });
   }
 

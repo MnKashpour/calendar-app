@@ -27,9 +27,23 @@ export class AllDayEventsDialogComponent {
   >;
   dialogService = inject(TuiDialogService);
 
+  exitOnComplete: boolean = false;
+
   showEventDialog(eventId: number) {
     eventDialogObs(this.dialogService, {
       eventId,
+    }).subscribe({
+      next: (operationDone) => {
+        if (operationDone) {
+          this.context.$implicit.next(true);
+          this.exitOnComplete = true;
+        }
+      },
+      complete: () => {
+        if (this.exitOnComplete) {
+          this.context.$implicit.complete();
+        }
+      },
     });
   }
 }

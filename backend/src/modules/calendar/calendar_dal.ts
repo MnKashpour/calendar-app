@@ -14,7 +14,8 @@ class CalendarDAL {
   async listCalendarsForUser(userId: number) {
     const calendars = await this.calendarsOfUserQuery(userId).select(
       'calendars.*',
-      'calendar_user.role as user_role'
+      'calendar_user.role as user_role',
+      'calendar_user.status as user_status'
     );
 
     return calendars;
@@ -31,7 +32,14 @@ class CalendarDAL {
    * Get calendar that the user has access to by id
    */
   async getCalendarByIdForUser(userId: number, calendarId: number) {
-    return await this.calendarsOfUserQuery(userId).where('id', calendarId).first();
+    return await this.calendarsOfUserQuery(userId)
+      .where('id', calendarId)
+      .select(
+        'calendars.*',
+        'calendar_user.role as user_role',
+        'calendar_user.status as user_status'
+      )
+      .first();
   }
 
   /**

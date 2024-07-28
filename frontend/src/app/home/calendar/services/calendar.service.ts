@@ -38,31 +38,31 @@ export class CalendarService {
       );
   }
 
-  index() {
-    return this.http.get<CalendarInterface>(`${this.baseApi}/calendars`);
-  }
+  // index() {
+  //   return this.http.get<CalendarInterface>(`${this.baseApi}/calendars`);
+  // }
 
-  createCalendar(
-    data: Omit<CalendarInterface, 'id' | 'createdAt' | 'updatedAt' | 'userRole'>
-  ) {
-    return this.http.post<{ id: number }>(`${this.baseApi}/calendars`, data);
-  }
+  // createCalendar(
+  //   data: Omit<CalendarInterface, 'id' | 'createdAt' | 'updatedAt' | 'userRole'>
+  // ) {
+  //   return this.http.post<{ id: number }>(`${this.baseApi}/calendars`, data);
+  // }
 
-  getCalendarById(id: number) {
-    return this.http.get<CalendarInterface>(`${this.baseApi}/calendars/${id}`);
-  }
+  // getCalendarById(id: number) {
+  //   return this.http.get<CalendarInterface>(`${this.baseApi}/calendars/${id}`);
+  // }
 
-  updateCalendar(
-    id: number,
-    data: Omit<CalendarInterface, 'id' | 'createdAt' | 'updatedAt' | 'userRole'>
-  ) {
-    return this.http.put<{ id: number }>(
-      `${this.baseApi}/calendars/${id}`,
-      data
-    );
-  }
+  // updateCalendar(
+  //   id: number,
+  //   data: Omit<CalendarInterface, 'id' | 'createdAt' | 'updatedAt' | 'userRole'>
+  // ) {
+  //   return this.http.put<{ id: number }>(
+  //     `${this.baseApi}/calendars/${id}`,
+  //     data
+  //   );
+  // }
 
-  deleteCalendar(id: number) {
-    return this.http.delete<{ id: number }>(`${this.baseApi}/calendars/${id}`);
-  }
+  // deleteCalendar(id: number) {
+  //   return this.http.delete<{ id: number }>(`${this.baseApi}/calendars/${id}`);
+  // }
 }

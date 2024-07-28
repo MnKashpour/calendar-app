@@ -241,7 +241,20 @@ router.post(
 
     const user = await UserService.findUserByEmail(body.email);
 
-    await EventService.addUserToEvent(eventId, user.id!, body.role);
+    try {
+      await EventService.addUserToEvent(eventId, user.id!, body.role);
+    } catch (error) {
+      if (error instanceof InvalidDataError) {
+        throw new InvalidDataError(error.message, [
+          {
+            property: 'email',
+            message: error.message,
+          },
+        ]);
+      }
+
+      throw error;
+    }
 
     return res.status(200).json();
   })
